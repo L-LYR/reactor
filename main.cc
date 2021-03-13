@@ -1,7 +1,7 @@
-#include "tcp_server.hh"
+#include "./tcp_server.hh"
 
 auto main() -> int {
-    tcp_server server;
+    TcpServer server;
     server.run();
     return 0;
 }

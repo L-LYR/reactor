@@ -1,21 +1,32 @@
-#pragma once
+#ifndef MINI_MODUO_TCP_SERVER
+#define MINI_MODUO_TCP_SERVER
+
+#include "./decl.hh"
+#include "./def.hh"
+#include "./channel_callback.hh"
+#include "./channel.hh"
 
 #include <sys/epoll.h>
-#include <arpa/inet.h>
-#include <iostream>
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
 
-const int max_listen_fd = 5;
-const int max_lines = 100;
-const int max_events = 500;
+class TcpServer : public ChannelCallback {
+  private:
+    int m_epfd;
+    int m_listenfd;
+    epoll_event m_events[max_events];
 
-class tcp_server {
+    auto bind_and_listen() -> void;
+
+    auto connect() -> void;
+
+    auto echo(int sockfd) -> void;
+
   public:
-    tcp_server() = default;
-    ~tcp_server() = default;
+    TcpServer();
+    ~TcpServer() = default;
+
+    virtual auto OnIn(int sockfd) -> void;
 
     auto run() -> void;
 };
+
+#endif
