@@ -5,7 +5,7 @@
 
 class ChannelCallback {
   public:
-    virtual auto OnIn(int sockfd) -> void{};
+    virtual auto on_in(int sockfd) -> void{};
 };
 
 #endif

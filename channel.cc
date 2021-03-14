@@ -18,7 +18,7 @@ auto Channel::get_sockfd() -> int { return m_sockfd; }
 
 auto Channel::handle_event() -> void {
     if (m_revents & EPOLLIN) {
-        m_callback->OnIn(m_sockfd);
+        m_callback->on_in(m_sockfd);
     }
 }
 
