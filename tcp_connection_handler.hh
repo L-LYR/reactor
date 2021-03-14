@@ -1,5 +1,5 @@
-#ifndef MINI_MODUO_TCP_CONNECTION
-#define MINI_MODUO_TCP_CONNECTION
+#ifndef MINI_MUDUO_TCP_CONNECTION
+#define MINI_MUDUO_TCP_CONNECTION
 
 #include "./decl.hh"
 #include "./callback.hh"

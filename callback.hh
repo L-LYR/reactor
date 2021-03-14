@@ -1,5 +1,5 @@
-#ifndef MINI_MODUO_CALLBACK
-#define MINI_MODUO_CALLBACK
+#ifndef MINI_MUDUO_CALLBACK
+#define MINI_MUDUO_CALLBACK
 
 #include "./decl.hh"
 

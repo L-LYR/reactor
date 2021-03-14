@@ -1,5 +1,5 @@
-#ifndef MINI_MODUO_CHANNEL
-#define MINI_MODUO_CHANNEL
+#ifndef MINI_MUDUO_CHANNEL
+#define MINI_MUDUO_CHANNEL
 
 #include "./decl.hh"
 

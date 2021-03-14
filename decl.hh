@@ -1,5 +1,5 @@
-#ifndef MINI_MODUO_DECL
-#define MINI_MODUO_DECL
+#ifndef MINI_MUDUO_DECL
+#define MINI_MUDUO_DECL
 
 // Each Channel is responsible for only one fd's IO.
 class Channel;
@@ -8,7 +8,7 @@ class ChannelCallback;
 class AcceptorCallback;
 
 // Acceptor is derived from ChannelCallback.
-// It will save the listenfd, and it is responsible 
+// It will save the listenfd, and it is responsible
 // for the acception and creation of connections.
 class Acceptor;
 // TcpConnectionHandler is derived from ChannelCallback.

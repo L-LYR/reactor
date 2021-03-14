@@ -1,5 +1,5 @@
-#ifndef MINI_MODUO_ACCEPTOR
-#define MINI_MODUO_ACCEPTOR
+#ifndef MINI_MUDUO_ACCEPTOR
+#define MINI_MUDUO_ACCEPTOR
 
 #include "./decl.hh"
 #include "./def.hh"
