@@ -1,6 +1,6 @@
 #include "./acceptor.hh"
 #include "./channel.hh"
-#include "./acceptor_callback.hh"
+#include "./callback.hh"
 
 #include <sys/fcntl.h>
 #include <errno.h>

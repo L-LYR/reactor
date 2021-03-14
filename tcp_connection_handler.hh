@@ -2,7 +2,7 @@
 #define MINI_MODUO_TCP_CONNECTION
 
 #include "./decl.hh"
-#include "./channel_callback.hh"
+#include "./callback.hh"
 #include "./http_request_parser.hh"
 
 class TcpConnectionHandler : public ChannelCallback {

@@ -3,7 +3,7 @@
 
 #include "./decl.hh"
 #include "./def.hh"
-#include "./channel_callback.hh"
+#include "./callback.hh"
 
 class Acceptor : public ChannelCallback {
   public:

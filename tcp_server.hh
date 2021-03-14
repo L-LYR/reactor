@@ -3,7 +3,7 @@
 
 #include "./def.hh"
 #include "./decl.hh"
-#include "./acceptor_callback.hh"
+#include "./callback.hh"
 #include "./acceptor.hh"
 
 #include <sys/epoll.h>

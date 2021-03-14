@@ -1,5 +1,5 @@
 #include "./channel.hh"
-#include "./channel_callback.hh"
+#include "./callback.hh"
 
 #include <iostream>
 #include <sys/epoll.h>
