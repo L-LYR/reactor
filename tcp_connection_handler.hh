@@ -3,6 +3,7 @@
 
 #include "./decl.hh"
 #include "./channel_callback.hh"
+#include "./http_request_parser.hh"
 
 class TcpConnectionHandler : public ChannelCallback {
   public:
@@ -15,6 +16,7 @@ class TcpConnectionHandler : public ChannelCallback {
     int m_epfd;
     int m_connfd;
     Channel* mp_channel;
+    RequestHandler m_parser;
 };
 
 #endif

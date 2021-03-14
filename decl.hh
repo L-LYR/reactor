@@ -20,4 +20,8 @@ class TcpConnectionHandler;
 // It has an acceptor for only accepting connection requests.
 class TcpServer;
 
+// RequestHandler is response for parse HTTP requests and
+// generator the results into responses.
+class RequestHandler;
+
 #endif
