@@ -1,18 +1,21 @@
 #include "./channel.hh"
 #include "./callback.hh"
+#include "./event_loop.hh"
 
 #include <iostream>
 #include <sys/epoll.h>
 
-Channel::Channel(int epfd, int sockfd) : m_epollfd(epfd),
-                                         m_sockfd(sockfd),
-                                         m_events(0),
-                                         m_revents(0),
-                                         m_callback(nullptr) {}
+Channel::Channel(EventLoop* event_loop, int sockfd) : m_sockfd(sockfd),
+                                                      m_events(0),
+                                                      m_revents(0),
+                                                      m_callback(nullptr),
+                                                      mp_event_loop(event_loop) {}
 
 auto Channel::set_callback(ChannelCallback* callback) -> void { m_callback = callback; }
 
-auto Channel::set_revent(int revent) -> void { m_revents = revent; }
+auto Channel::set_revents(int revent) -> void { m_revents = revent; }
+
+auto Channel::get_events() -> int { return m_events; }
 
 auto Channel::get_sockfd() -> int { return m_sockfd; }
 
@@ -28,10 +31,5 @@ auto Channel::enable_read() -> void {
 }
 
 auto Channel::update() -> void {
-    epoll_event ev;
-    ev.data.ptr = this;
-    ev.events = m_events;
-    if (epoll_ctl(m_epollfd, EPOLL_CTL_ADD, m_sockfd, &ev) == -1) {
-        std::cout << "error in epoll_ctl(), errno: " << errno << std::endl;
-    }
+    mp_event_loop->update(this);
 }

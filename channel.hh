@@ -5,13 +5,17 @@
 
 class Channel {
   public:
-    Channel(int epfd, int sockfd);
+    Channel(EventLoop* event_loop, int sockfd);
     ~Channel() = default;
 
     auto set_callback(ChannelCallback* callback) -> void;
-    auto set_revent(int revent) -> void;
+
+    auto set_revents(int revent) -> void;
+    auto get_events() -> int;
     auto get_sockfd() -> int;
+
     auto handle_event() -> void;
+
     auto enable_read() -> void;
 
   private:
@@ -22,6 +26,7 @@ class Channel {
     int m_events;
     int m_revents;
     ChannelCallback* m_callback;
+    EventLoop* mp_event_loop;
 };
 
 #endif

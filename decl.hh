@@ -15,6 +15,10 @@ class Acceptor;
 // It is responsible for the only IO through one connection.
 class TcpConnectionHandler;
 
+class Selector;
+
+class EventLoop;
+
 // TcpServer is derived from AcceptorCallback.
 // It will save a map: connfd -> connection handler.
 // It has an acceptor for only accepting connection requests.

@@ -4,9 +4,7 @@
 #include "./def.hh"
 #include "./decl.hh"
 #include "./callback.hh"
-#include "./acceptor.hh"
 
-#include <sys/epoll.h>
 #include <unordered_map>
 
 class TcpServer : public AcceptorCallback {
@@ -16,12 +14,11 @@ class TcpServer : public AcceptorCallback {
 
     virtual auto on_connection(int sockfd) -> void;
 
-    auto run() -> void;
+    auto run() -> int;
 
   private:
-    int m_epfd;
-    epoll_event m_events[max_events];
     Acceptor* mp_acceptor;
+    EventLoop* mp_event_loop;
     std::unordered_map<int, TcpConnectionHandler*> m_connections;
 };
 

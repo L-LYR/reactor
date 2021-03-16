@@ -1,47 +1,32 @@
 #include "./http_request_parser.hh"
 
-RequestHandler::RequestHandler() { reset(); }
+auto RequestHandler::get_response() -> const char* {
+    return m_response.c_str();
+}
 
-auto RequestHandler::has_finished() -> bool { return available; }
-
-auto RequestHandler::reset() -> void {
-    is_cr = false;
-    is_eof = false;
-    is_first_line = true;
-    need_key = true;
-    available = false;
-    first_line_field = 0;
-    prev_ch = '\0';
-
-    tmp_key.clear();
-    tmp_value.clear();
-
-    m_method.clear();
-    m_path.clear();
-    m_proto_ver.clear();
-    m_headers.clear();
+auto RequestHandler::get_response_length() -> int {
+    return m_response.length();
 }
 
 auto RequestHandler::parse(const char* buffer, int size) -> void {
     char ch;
-    for (int i = 0; i < size; ++i, prev_ch = ch) {
+    for (int i = 0; i < size; ++i, m_parse_state.prev_ch = ch) {
         ch = buffer[i];
         if (ch == '\r') {
-            is_first_line = false;
-            is_cr = true;
-        } else if (is_cr and ch == '\n') {
-            is_cr = false;
-            need_key = true;
-            available = true;
-            m_headers[tmp_key] = tmp_value;
-            tmp_key.clear();
-            tmp_value.clear();
-
-        } else if (is_first_line) {
+            m_parse_state.is_first_line = false;
+            m_parse_state.is_cr = true;
+        } else if (m_parse_state.is_cr and ch == '\n') {
+            m_parse_state.is_cr = false;
+            m_parse_state.need_key = true;
+            m_parse_state.available = true;
+            m_headers[m_parse_state.tmp_key] = m_parse_state.tmp_value;
+            m_parse_state.tmp_key.clear();
+            m_parse_state.tmp_value.clear();
+        } else if (m_parse_state.is_first_line) {
             if (ch == ' ') {
-                first_line_field++;
+                m_parse_state.first_line_field++;
             } else {
-                switch (first_line_field) {
+                switch (m_parse_state.first_line_field) {
                     case 0:
                         m_method.append(1, ch);
                         break;
@@ -56,19 +41,20 @@ auto RequestHandler::parse(const char* buffer, int size) -> void {
                 }
             }
         } else {
-            if (ch == ' ' and prev_ch == ':') {
-                tmp_key.pop_back();
-                need_key = false;
-            } else if (need_key) {
-                tmp_key.append(1, ch);
+            if (ch == ' ' and m_parse_state.prev_ch == ':') {
+                m_parse_state.tmp_key.pop_back();
+                m_parse_state.need_key = false;
+            } else if (m_parse_state.need_key) {
+                m_parse_state.tmp_key.append(1, ch);
             } else {
-                tmp_value.append(1, ch);
+                m_parse_state.tmp_value.append(1, ch);
             }
         }
     }
 }
 
-auto RequestHandler::generate_response() -> std::string {
+auto RequestHandler::generate_response() -> bool {
+    if (!m_parse_state.available) return false;
     std::string response_body =
         "<!DOCTYPE html><html><head>"
         "<title>Request info</title>"
@@ -101,5 +87,6 @@ auto RequestHandler::generate_response() -> std::string {
         "Content-Length: " +
         std::to_string(response_body.length()) + "\r\n\r\n";
 
-    return response_headers + response_body;
+    m_response = response_headers + response_body;
+    return true;
 }

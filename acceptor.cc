@@ -7,14 +7,14 @@
 #include <arpa/inet.h>
 #include <iostream>
 
-Acceptor::Acceptor(int epfd) : m_epfd(epfd),
-                               m_listenfd(-1),
-                               mp_channel(nullptr),
-                               mp_acceptor_callback(nullptr) {}
+Acceptor::Acceptor(EventLoop* event_loop) : mp_event_loop(event_loop),
+                                            m_listenfd(-1),
+                                            mp_channel(nullptr),
+                                            mp_acceptor_callback(nullptr) {}
 
 auto Acceptor::run() -> void {
     bind_and_listen();
-    mp_channel = new Channel(m_epfd, m_listenfd);
+    mp_channel = new Channel(mp_event_loop, m_listenfd);
     mp_channel->set_callback(this);
     mp_channel->enable_read();
 }
