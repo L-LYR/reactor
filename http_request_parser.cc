@@ -1,14 +1,33 @@
 #include "./http_request_parser.hh"
 
-auto RequestHandler::get_response() -> const char* {
-    return m_response.c_str();
+ParserState::ParserState() { reset(); }
+
+auto ParserState::reset() -> void {
+    is_cr = is_eof =
+        need_key = available = false;
+    is_first_line = true;
+    first_line_field = 0;
+    prev_ch = '\0';
+    tmp_key.clear();
+    tmp_value.clear();
 }
 
-auto RequestHandler::get_response_length() -> int {
-    return m_response.length();
+RequestParser::RequestParser() { reset(); }
+
+auto RequestParser::reset() -> void {
+    m_parse_state.reset();
+    m_method.clear();
+    m_path.clear();
+    m_proto_ver.clear();
+    m_headers.clear();
+    m_response.clear();
 }
 
-auto RequestHandler::parse(const char* buffer, int size) -> void {
+auto RequestParser::get_response() -> const std::string& {
+    return m_response;
+}
+
+auto RequestParser::parse(const char* buffer, int size) -> void {
     char ch;
     for (int i = 0; i < size; ++i, m_parse_state.prev_ch = ch) {
         ch = buffer[i];
@@ -53,7 +72,7 @@ auto RequestHandler::parse(const char* buffer, int size) -> void {
     }
 }
 
-auto RequestHandler::generate_response() -> bool {
+auto RequestParser::generate_response() -> bool {
     if (!m_parse_state.available) return false;
     std::string response_body =
         "<!DOCTYPE html><html><head>"

@@ -11,21 +11,20 @@ class AcceptorCallback;
 // It will save the listenfd, and it is responsible
 // for the acception and creation of connections.
 class Acceptor;
-// TcpConnectionHandler is derived from ChannelCallback.
+// TcpConnection is derived from ChannelCallback.
 // It is responsible for the only IO through one connection.
-class TcpConnectionHandler;
+class TcpConnection;
 
 class Selector;
 
 class EventLoop;
 
-// TcpServer is derived from AcceptorCallback.
+// TcpServerBase is derived from AcceptorCallback.
 // It will save a map: connfd -> connection handler.
 // It has an acceptor for only accepting connection requests.
-class TcpServer;
+class TcpServerBase;
 
-// RequestHandler is response for parse HTTP requests and
-// generator the results into responses.
-class RequestHandler;
+// Server is a virtual base class for user as an interface.
+class Server;
 
 #endif

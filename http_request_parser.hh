@@ -4,33 +4,38 @@
 #include <string>
 #include <map>
 
-class RequestHandler {
+struct ParserState {
+    // used for parse, save state
+    bool is_cr;
+    bool is_eof;
+    bool is_first_line;
+    bool need_key;
+    bool available;
+    int first_line_field;
+    char prev_ch;
+    std::string tmp_key;
+    std::string tmp_value;
+
+    ParserState();
+    ~ParserState() = default;
+
+    auto reset() -> void;
+};
+
+class RequestParser {
   public:
-    RequestHandler() = default;
-    ~RequestHandler() = default;
+    RequestParser();
+    ~RequestParser() = default;
 
     auto parse(const char *buffer, int size) -> void;
+
+    auto reset() -> void;
+
     auto generate_response() -> bool;
-    auto get_response() -> const char *;
-    auto get_response_length() -> int;
+    auto get_response() -> const std::string &;
 
   private:
-    struct ParseState {
-        // used for parse, save state
-        bool is_cr;
-        bool is_eof;
-        bool is_first_line = true;
-        bool need_key;
-        bool available;
-        int first_line_field = 0;
-        char prev_ch;
-        std::string tmp_key;
-        std::string tmp_value;
-        
-        ParseState() = default;
-    };
-
-    ParseState m_parse_state;
+    ParserState m_parse_state;
 
     // results
     std::string m_method;
