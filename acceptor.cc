@@ -1,6 +1,5 @@
 #include "./acceptor.hh"
 #include "./channel.hh"
-#include "./callback.hh"
 
 #include <sys/fcntl.h>
 #include <errno.h>
@@ -23,7 +22,7 @@ auto Acceptor::set_callback(AcceptorCallback* p_acceptor_callback) -> void {
     mp_acceptor_callback = p_acceptor_callback;
 }
 
-auto Acceptor::on_in(int sockfd) -> void {
+auto Acceptor::handle_read() -> void {
     sockaddr_in client_addr;
     socklen_t client_length = sizeof(sockaddr_in);
     int connfd = accept(m_listenfd, (sockaddr*)&client_addr, (socklen_t*)&client_length);
@@ -39,6 +38,8 @@ auto Acceptor::on_in(int sockfd) -> void {
 
     mp_acceptor_callback->on_connection(connfd);
 }
+
+auto Acceptor::handle_write() -> void {}
 
 auto Acceptor::bind_and_listen() -> void {
     // listen socket

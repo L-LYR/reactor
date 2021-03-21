@@ -10,6 +10,7 @@ class AcceptorCallback {
 
 class ChannelCallback {
   public:
-    virtual auto on_in(int sockfd) -> void = 0;
+    virtual auto handle_read() -> void = 0;
+    virtual auto handle_write() -> void = 0;
 };
 #endif

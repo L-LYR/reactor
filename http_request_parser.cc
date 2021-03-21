@@ -23,8 +23,12 @@ auto RequestParser::reset() -> void {
     m_response.clear();
 }
 
-auto RequestParser::get_response() -> const std::string& {
-    return m_response;
+auto RequestParser::get_response() -> const char* {
+    return m_response.c_str();
+}
+
+auto RequestParser::get_response_length() -> size_t {
+    return m_response.length();
 }
 
 auto RequestParser::parse(const char* buffer, int size) -> void {

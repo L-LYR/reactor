@@ -7,6 +7,8 @@ class Channel;
 class ChannelCallback;
 class AcceptorCallback;
 
+class Runnable;
+
 // Acceptor is derived from ChannelCallback.
 // It will save the listenfd, and it is responsible
 // for the acception and creation of connections.
@@ -18,6 +20,8 @@ class TcpConnection;
 class Selector;
 
 class EventLoop;
+
+class Buffer;
 
 // TcpServerBase is derived from AcceptorCallback.
 // It will save a map: connfd -> connection handler.

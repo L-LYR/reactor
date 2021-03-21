@@ -32,7 +32,8 @@ class RequestParser {
     auto reset() -> void;
 
     auto generate_response() -> bool;
-    auto get_response() -> const std::string &;
+    auto get_response() -> const char *;
+    auto get_response_length() -> size_t;
 
   private:
     ParserState m_parse_state;

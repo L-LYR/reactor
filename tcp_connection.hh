@@ -4,30 +4,31 @@
 #include "./def.hh"
 #include "./decl.hh"
 #include "./callback.hh"
-#include "./http_request_parser.hh"
+#include "./runnable.hh"
+#include "./buffer.hh"
 
 #include <string>
 
-class TcpConnection : public ChannelCallback {
+class TcpConnection : public ChannelCallback, public Runnable {
   public:
     TcpConnection(EventLoop* event_loop, int connfd);
     ~TcpConnection() = default;
 
-    virtual auto on_in(int sockfd) -> void;
+    virtual auto handle_read() -> void;
+    virtual auto handle_write() -> void;
+    virtual auto run() -> void;
 
     auto regester_in(Server* server) -> void;
     auto establish() -> void;
 
-    auto write(const std::string& data) -> void;
+    auto send(const char* data, size_t length) -> void;
 
   private:
-    int m_connfd;
     Channel* mp_channel;
     EventLoop* mp_event_loop;
     Server* mp_server;
-
-    char m_read_buffer[max_lines + 1];
-    int m_read_length;
+    Buffer m_in_buffer;
+    Buffer m_out_buffer;
 };
 
 #endif

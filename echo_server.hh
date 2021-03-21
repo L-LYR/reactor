@@ -4,25 +4,23 @@
 #include "./decl.hh"
 #include "./server.hh"
 #include "./tcp_server_base.hh"
+#include "./http_request_parser.hh"
 
 #include <string>
 
-class EchoServer : public Server {
+class EchoServer : public Server, public TcpServerBase {
   public:
     EchoServer(EventLoop* event_loop);
     ~EchoServer() = default;
 
     virtual auto on_connection(TcpConnection* tcp_connection) -> void;
-    virtual auto on_message(TcpConnection* tcp_connection, const std::string& data) -> void;
-
-    auto run() -> void;
-
+    virtual auto on_message(TcpConnection* tcp_connection, Buffer& buffer) -> void;
+    virtual auto on_write_done(TcpConnection* tcp_connection) -> void;
 
   private:
-    auto echo(TcpConnection* tcp_connection, const std::string& data) -> void;
-    
+    auto echo(TcpConnection* tcp_connection, Buffer& buffer) -> void;
+
     EventLoop* mp_event_loop;
-    TcpServerBase m_tcp_server_base;
     RequestParser m_request_parser;
 };
 

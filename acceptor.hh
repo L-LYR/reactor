@@ -13,7 +13,8 @@ class Acceptor : public ChannelCallback {
     auto run() -> void;
     auto set_callback(AcceptorCallback* p_acceptor_callback) -> void;
 
-    virtual auto on_in(int sockfd) -> void;
+    virtual auto handle_read() -> void;
+    virtual auto handle_write() -> void;
 
   private:
     auto bind_and_listen() -> void;

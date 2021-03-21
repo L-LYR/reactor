@@ -9,10 +9,10 @@
 
 class TcpServerBase : public AcceptorCallback {
   public:
-    TcpServerBase(EventLoop* event_loop);
+    explicit TcpServerBase(EventLoop* event_loop);
     ~TcpServerBase() = default;
 
-    virtual auto on_connection(int sockfd) -> void;
+    virtual auto on_connection(int sockfd) -> void override;
 
     auto run() -> void;
 

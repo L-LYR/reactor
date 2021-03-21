@@ -1,20 +1,70 @@
 #include "./event_loop.hh"
 #include "./selector.hh"
 
+#include <iostream>
+#include <cerrno>
+#include <sys/eventfd.h>
+#include <unistd.h>
+#include <vector>
+
 EventLoop::EventLoop()
-    : m_terminate(false), m_selector(new Selector) {}
+    : m_terminate(false), m_selector(new Selector) {
+    create_eventfd();
+
+    mp_wakeup_channel = new Channel(this, m_eventfd);
+    mp_wakeup_channel->set_callback(this);
+    mp_wakeup_channel->enable_read();
+}
 
 auto EventLoop::run() -> void {
-    std::vector<Channel*> p_channels;
     while (!m_terminate) {
-        m_selector->poll(p_channels);
-        for (auto p_channel : p_channels) {
+        m_selector->poll(m_channels);
+        for (auto p_channel : m_channels) {
             p_channel->handle_event();
         }
-        p_channels.clear();
+        m_channels.clear();
+        invoke_pending_runnables();
     }
 }
 
+auto EventLoop::queue_loop(Runnable* runnable) -> void {
+    m_runnables.push_back(runnable);
+    wakeup();
+}
+
+auto EventLoop::handle_read() -> void {
+    uint64_t one = 1;
+    ssize_t n = ::read(m_eventfd, &one, sizeof(one));
+    if (n != sizeof(one)) {
+        std::cout << "Fail to read signal..." << std::endl;
+    }
+}
+
+auto EventLoop::handle_write() -> void {}
+
 auto EventLoop::update(Channel* channel) -> void {
     m_selector->update(channel);
+}
+
+auto EventLoop::wakeup() -> void {
+    uint64_t one = 1;
+    ssize_t n = ::write(m_eventfd, &one, sizeof(one));
+    if (n != sizeof(one)) {
+        std::cout << "Fail to send wakeup signal..." << std::endl;
+    }
+}
+
+auto EventLoop::create_eventfd() -> void {
+    m_eventfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    if (m_eventfd < 0) {
+        std::cout << "Failed in eventfd, errno: " << errno << std::endl;
+    }
+}
+
+auto EventLoop::invoke_pending_runnables() -> void {
+    std::vector<Runnable*> p_runnables_tmp;
+    p_runnables_tmp.swap(m_runnables);
+    for (auto p_runnable : p_runnables_tmp) {
+        p_runnable->run();
+    }
 }

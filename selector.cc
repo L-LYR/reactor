@@ -27,5 +27,14 @@ auto Selector::update(Channel* channel) -> void {
     struct epoll_event ev;
     ev.data.ptr = channel;
     ev.events = channel->get_events();
-    ::epoll_ctl(m_epfd, EPOLL_CTL_ADD, channel->get_sockfd(), &ev);
+
+    int op;
+    if (channel->get_state() == Channel::ChannelState::is_new) {
+        op = EPOLL_CTL_ADD;
+        channel->set_state(Channel::ChannelState::is_added);
+    } else {
+        op = EPOLL_CTL_MOD;
+    }
+
+    ::epoll_ctl(m_epfd, op, channel->get_sockfd(), &ev);
 }
