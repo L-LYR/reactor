@@ -1,12 +1,12 @@
 #ifndef MINI_MUDUO_ECHO_SERVER
 #define MINI_MUDUO_ECHO_SERVER
 
+#include <string>
+
 #include "./decl.hh"
+#include "./http_request_parser.hh"
 #include "./server.hh"
 #include "./tcp_server_base.hh"
-#include "./http_request_parser.hh"
-
-#include <string>
 
 class EchoServer : public Server, public TcpServerBase {
   public:

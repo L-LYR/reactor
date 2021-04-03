@@ -1,8 +1,8 @@
 #ifndef MINI_MUDUO_HTTP_REQUEST_PARSER
 #define MINI_MUDUO_HTTP_REQUEST_PARSER
 
-#include <string>
 #include <map>
+#include <string>
 
 struct ParserState {
     // used for parse, save state

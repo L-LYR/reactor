@@ -1,8 +1,10 @@
 #include "./buffer.hh"
-#include "./def.hh"
+
+#include <sys/uio.h>
 
 #include <iostream>
-#include <sys/uio.h>
+
+#include "./def.hh"
 
 Buffer::Buffer(size_t initial_size) : m_buffer(buffer_prepend_size + initial_size),
                                       m_read_index(buffer_prepend_size),

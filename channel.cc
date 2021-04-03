@@ -1,9 +1,11 @@
 #include "./channel.hh"
-#include "./callback.hh"
-#include "./event_loop.hh"
+
+#include <sys/epoll.h>
 
 #include <iostream>
-#include <sys/epoll.h>
+
+#include "./callback.hh"
+#include "./event_loop.hh"
 
 Channel::Channel(EventLoop* event_loop, int sockfd)
     : m_sockfd(sockfd),

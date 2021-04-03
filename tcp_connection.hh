@@ -1,13 +1,13 @@
 #ifndef MINI_MUDUO_TCP_CONNECTION
 #define MINI_MUDUO_TCP_CONNECTION
 
-#include "./def.hh"
-#include "./decl.hh"
-#include "./callback.hh"
-#include "./runnable.hh"
-#include "./buffer.hh"
-
 #include <string>
+
+#include "./buffer.hh"
+#include "./callback.hh"
+#include "./decl.hh"
+#include "./def.hh"
+#include "./runnable.hh"
 
 class TcpConnection : public ChannelCallback, public Runnable {
   public:

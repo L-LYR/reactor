@@ -1,9 +1,9 @@
 #ifndef MINI_MUDUO_ACCEPTOR
 #define MINI_MUDUO_ACCEPTOR
 
+#include "./callback.hh"
 #include "./decl.hh"
 #include "./def.hh"
-#include "./callback.hh"
 
 class Acceptor : public ChannelCallback {
   public:

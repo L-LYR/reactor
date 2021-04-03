@@ -1,7 +1,8 @@
-#include "./def.hh"
-#include "./acceptor.hh"
-#include "./event_loop.hh"
 #include "./tcp_server_base.hh"
+
+#include "./acceptor.hh"
+#include "./def.hh"
+#include "./event_loop.hh"
 #include "./tcp_connection.hh"
 
 TcpServerBase::TcpServerBase(EventLoop* event_loop)

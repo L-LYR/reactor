@@ -1,10 +1,12 @@
 #include "./acceptor.hh"
-#include "./channel.hh"
 
-#include <sys/fcntl.h>
-#include <errno.h>
 #include <arpa/inet.h>
+#include <errno.h>
+#include <sys/fcntl.h>
+
 #include <iostream>
+
+#include "./channel.hh"
 
 Acceptor::Acceptor(EventLoop* event_loop) : mp_event_loop(event_loop),
                                             m_listenfd(-1),

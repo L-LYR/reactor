@@ -1,8 +1,8 @@
 #ifndef MINI_MUDUO_SERVER
 #define MINI_MUDUO_SERVER
 
-#include "./tcp_connection.hh"
 #include "./buffer.hh"
+#include "./tcp_connection.hh"
 
 class Server {
   public:

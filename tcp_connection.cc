@@ -1,12 +1,14 @@
-#include "./channel.hh"
-#include "./server.hh"
 #include "./tcp_connection.hh"
-#include "./event_loop.hh"
 
-#include <unistd.h>
 #include <errno.h>
+#include <unistd.h>
+
 #include <iostream>
 #include <string>
+
+#include "./channel.hh"
+#include "./event_loop.hh"
+#include "./server.hh"
 
 TcpConnection::TcpConnection(EventLoop* event_loop, int connfd)
     : mp_event_loop(event_loop) {

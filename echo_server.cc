@@ -1,8 +1,9 @@
 #include "./echo_server.hh"
-#include "./event_loop.hh"
-#include "./def.hh"
 
 #include <iostream>
+
+#include "./def.hh"
+#include "./event_loop.hh"
 
 EchoServer::EchoServer(EventLoop* event_loop)
     : TcpServerBase(event_loop), mp_event_loop(event_loop) {

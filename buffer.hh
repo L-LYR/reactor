@@ -1,10 +1,10 @@
 #ifndef MINI_MODUO_BUFFER
 #define MINI_MODUO_BUFFER
 
-#include "./def.hh"
-
-#include <vector>
 #include <string>
+#include <vector>
+
+#include "./def.hh"
 
 class Buffer {
   public:
@@ -29,7 +29,6 @@ class Buffer {
     auto prependable_bytes() -> size_t;
 
     auto begin() -> char*;
-
 
     auto make_space(size_t length) -> void;
 

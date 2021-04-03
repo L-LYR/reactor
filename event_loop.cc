@@ -1,11 +1,13 @@
 #include "./event_loop.hh"
-#include "./selector.hh"
 
-#include <iostream>
-#include <cerrno>
 #include <sys/eventfd.h>
 #include <unistd.h>
+
+#include <cerrno>
+#include <iostream>
 #include <vector>
+
+#include "./selector.hh"
 
 EventLoop::EventLoop()
     : m_terminate(false), m_selector(new Selector) {

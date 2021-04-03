@@ -1,11 +1,12 @@
 #ifndef MINI_MUDUO_SLECTOR
 #define MINI_MUDUO_SLECTOR
 
-#include "./def.hh"
-#include "./channel.hh"
-
 #include <sys/epoll.h>
+
 #include <vector>
+
+#include "./channel.hh"
+#include "./def.hh"
 
 class Selector {
   public:

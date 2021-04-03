@@ -1,12 +1,12 @@
 #ifndef MINI_MUDUO_EVENT_LOOP
 #define MINI_MUDUO_EVENT_LOOP
 
-#include "./decl.hh"
-#include "./callback.hh"
-#include "./runnable.hh"
-#include "./channel.hh"
-
 #include <vector>
+
+#include "./callback.hh"
+#include "./channel.hh"
+#include "./decl.hh"
+#include "./runnable.hh"
 
 class EventLoop : public ChannelCallback {
   public:
