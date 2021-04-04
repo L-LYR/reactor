@@ -18,10 +18,15 @@ class Acceptor;
 class TcpConnection;
 
 class Selector;
-
 class EventLoop;
 
 class Buffer;
+
+class Timestamp;
+class Timer;
+class AddTimerWrapper;
+class RemoveTimerWrapper;
+class TimerQueue;
 
 // TcpServerBase is derived from AcceptorCallback.
 // It will save a map: connfd -> connection handler.

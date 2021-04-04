@@ -3,7 +3,7 @@
 
 class Runnable {
   public:
-    virtual auto run() -> void = 0;
+    virtual auto run(void* param) -> void = 0;
 };
 
 #endif

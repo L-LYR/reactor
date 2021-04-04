@@ -14,7 +14,7 @@ class TcpServerBase : public AcceptorCallback {
 
     virtual auto on_connection(int sockfd) -> void override;
 
-    auto run() -> void;
+    auto start() -> void;
 
     auto set_callback(Server* server) -> void;
 

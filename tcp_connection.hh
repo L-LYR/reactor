@@ -16,7 +16,7 @@ class TcpConnection : public ChannelCallback, public Runnable {
 
     virtual auto handle_read() -> void;
     virtual auto handle_write() -> void;
-    virtual auto run() -> void;
+    virtual auto run(void* dummy) -> void;
 
     auto regester_in(Server* server) -> void;
     auto establish() -> void;

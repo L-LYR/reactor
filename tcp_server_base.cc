@@ -15,7 +15,7 @@ auto TcpServerBase::on_connection(int connfd) -> void {
     tcp_connection->establish();
 }
 
-auto TcpServerBase::run() -> void {
+auto TcpServerBase::start() -> void {
     mp_acceptor = new Acceptor(mp_event_loop);
     mp_acceptor->set_callback(this);
     mp_acceptor->run();

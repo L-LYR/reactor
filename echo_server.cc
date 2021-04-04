@@ -4,10 +4,18 @@
 
 #include "./def.hh"
 #include "./event_loop.hh"
+#include "./timer.hh"
 
 EchoServer::EchoServer(EventLoop* event_loop)
-    : TcpServerBase(event_loop), mp_event_loop(event_loop) {
-    set_callback(this);
+    : m_tcp_server_base(event_loop),
+      mp_event_loop(event_loop),
+      m_timer(nullptr),
+      m_index(0) {
+    m_tcp_server_base.set_callback(this);
+}
+
+auto EchoServer::start() -> void {
+    m_tcp_server_base.start();
 }
 
 auto EchoServer::on_connection(TcpConnection* tcp_connection) -> void {
@@ -17,6 +25,9 @@ auto EchoServer::on_connection(TcpConnection* tcp_connection) -> void {
 auto EchoServer::on_message(TcpConnection* tcp_connection, Buffer& buffer) -> void {
     std::cout << "Message Received..." << std::endl;
     echo(tcp_connection, buffer);
+    if (m_timer == nullptr) {
+        m_timer = mp_event_loop->run_every(0.5, this);
+    }
 }
 
 auto EchoServer::on_write_done(TcpConnection* tcp_connection) -> void {
@@ -36,4 +47,13 @@ auto EchoServer::echo(TcpConnection* tcp_connection, Buffer& buffer) -> void {
         std::cout << "Fail to response..." << std::endl;
     }
     m_request_parser.reset();
+}
+
+auto EchoServer::run(void* param) -> void {
+    std::cout << m_index << std::endl;
+    if (m_index++ == 3) {
+        mp_event_loop->cancel_timer(m_timer);
+        m_index = 0;
+        m_timer = nullptr;
+    }
 }

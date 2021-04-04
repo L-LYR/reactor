@@ -31,14 +31,14 @@ auto TcpConnection::handle_read() -> void {
         if (errno == ECONNRESET) {
             std::cout << "ECONNREST: close socket fd: " << sockfd
                       << std::endl;
-            close(sockfd);
+            ::close(sockfd);
         } else {
             std::cout << "error in read(), errno: " << errno << std::endl;
         }
     } else if (ret == 0) {
         std::cout << "read nothing from socket fd, close " << sockfd
                   << std::endl;
-        close(sockfd);
+        ::close(sockfd);
     } else {
         mp_server->on_message(this, m_in_buffer);
     }
@@ -55,13 +55,13 @@ auto TcpConnection::handle_write() -> void {
             m_out_buffer.retrieve(ret);
             if (m_out_buffer.readable_bytes() == 0) {
                 mp_channel->disable_write();
-                mp_event_loop->queue_loop(this);
+                mp_event_loop->queue_loop(this, nullptr);
             }
         }
     }
 }
 
-auto TcpConnection::run() -> void {
+auto TcpConnection::run(void* dummy) -> void {
     mp_server->on_write_done(this);
 }
 
@@ -69,11 +69,11 @@ auto TcpConnection::send(const char* data, size_t length) -> void {
     int ret = 0;
     int sockfd = mp_channel->get_sockfd();
     if (!mp_channel->is_writing() && m_out_buffer.readable_bytes() == 0) {
-        ret = write(sockfd, data, length);
+        ret = ::write(sockfd, data, length);
         if (ret < 0) {
-            std::cout << "errno in write(), errnor: " << errno << std::endl;
+            std::cout << "errno in write(), errno: " << errno << std::endl;
         } else if (size_t(ret) == length) {
-            mp_event_loop->queue_loop(this);
+            mp_event_loop->queue_loop(this, nullptr);
         }
     }
     if (size_t(ret) < length) {

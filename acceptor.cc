@@ -27,7 +27,7 @@ auto Acceptor::set_callback(AcceptorCallback* p_acceptor_callback) -> void {
 auto Acceptor::handle_read() -> void {
     sockaddr_in client_addr;
     socklen_t client_length = sizeof(sockaddr_in);
-    int connfd = accept(m_listenfd, (sockaddr*)&client_addr, (socklen_t*)&client_length);
+    int connfd = ::accept(m_listenfd, (sockaddr*)&client_addr, (socklen_t*)&client_length);
     if (connfd < 0) {
         std::cout << "error in accept(), connfd: " << connfd << " errno: " << errno << std::endl;
         return;
@@ -45,29 +45,29 @@ auto Acceptor::handle_write() -> void {}
 
 auto Acceptor::bind_and_listen() -> void {
     // listen socket
-    m_listenfd = socket(AF_INET, SOCK_STREAM, 0);  // TCP
+    m_listenfd = ::socket(AF_INET, SOCK_STREAM, 0);  // TCP
     if (m_listenfd < 0) {
         std::cout << "error in socket(), errno: " << errno << std::endl;
     }
-    if (-1 == fcntl(m_listenfd, F_SETFL, O_NONBLOCK)) {
+    if (-1 == ::fcntl(m_listenfd, F_SETFL, O_NONBLOCK)) {
         std::cout << "error in fcntl()" << std::endl;
     }  // non-block io
 
     int on = 1;
-    if (-1 == setsockopt(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) {
+    if (-1 == ::setsockopt(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) {
         std::cout << "error in setsockopt(), errno: " << errno << std::endl;
     }  // reusable addr in bind
 
     // bind
     sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons(10086);
-    if (-1 == bind(m_listenfd, (sockaddr*)&server_addr, sizeof(server_addr))) {
+    server_addr.sin_addr.s_addr = ::htonl(INADDR_ANY);
+    server_addr.sin_port = ::htons(10086);
+    if (-1 == ::bind(m_listenfd, (sockaddr*)&server_addr, sizeof(server_addr))) {
         std::cout << "error in bind(), errno: " << errno << std::endl;
     }
     // listen
-    if (-1 == listen(m_listenfd, max_listen_fd)) {
+    if (-1 == ::listen(m_listenfd, max_listen_fd)) {
         std::cout << "error in listen(), errno: " << errno << std::endl;
     }
     // show info
