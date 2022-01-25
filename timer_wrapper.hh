@@ -6,27 +6,23 @@
 #include "./timer_queue.hh"
 
 class AddTimerWrapper : public Runnable {
-  public:
-    AddTimerWrapper(TimerQueue* p_queue) : mp_queue(p_queue) {}
+public:
+  AddTimerWrapper(TimerQueue *p_queue) : mp_queue(p_queue) {}
 
-    virtual auto run(void* param) -> void {
-        mp_queue->add_timer(param);
-    }
+  virtual auto run(void *param) -> void { mp_queue->add_timer(param); }
 
-  private:
-    TimerQueue* mp_queue;
+private:
+  TimerQueue *mp_queue;
 };
 
 class RemoveTimerWrapper : public Runnable {
-  public:
-    RemoveTimerWrapper(TimerQueue* p_queue) : mp_queue(p_queue) {}
+public:
+  RemoveTimerWrapper(TimerQueue *p_queue) : mp_queue(p_queue) {}
 
-    virtual auto run(void* param) -> void {
-        mp_queue->remove_timer(param);
-    }
+  virtual auto run(void *param) -> void { mp_queue->remove_timer(param); }
 
-  private:
-    TimerQueue* mp_queue;
+private:
+  TimerQueue *mp_queue;
 };
 
 #endif

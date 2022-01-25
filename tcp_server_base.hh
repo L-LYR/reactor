@@ -8,21 +8,21 @@
 #include "./def.hh"
 
 class TcpServerBase : public AcceptorCallback {
-  public:
-    explicit TcpServerBase(EventLoop* event_loop);
-    ~TcpServerBase() = default;
+public:
+  explicit TcpServerBase(EventLoop *event_loop);
+  ~TcpServerBase() = default;
 
-    virtual auto on_connection(int sockfd) -> void override;
+  virtual auto on_connection(int sockfd) -> void override;
 
-    auto start() -> void;
+  auto start() -> void;
 
-    auto set_callback(Server* server) -> void;
+  auto set_callback(Server *server) -> void;
 
-  private:
-    Server* mp_server;
-    Acceptor* mp_acceptor;
-    EventLoop* mp_event_loop;
-    std::unordered_map<int, TcpConnection*> m_connections;
+private:
+  Server *mp_server;
+  Acceptor *mp_acceptor;
+  EventLoop *mp_event_loop;
+  std::unordered_map<int, TcpConnection *> m_connections;
 };
 
 #endif

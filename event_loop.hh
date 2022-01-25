@@ -11,35 +11,35 @@
 #include "./timer_queue.hh"
 
 class EventLoop : public ChannelCallback {
-  public:
-    EventLoop();
-    ~EventLoop() = default;
-    auto loop() -> void;
-    auto update(Channel* p_channel) -> void;
-    auto queue_loop(Runnable* p_runnable, void* p_param) -> void;
-    auto run_at(Timestamp when, Runnable* p_runnable) -> void*;
-    auto run_after(double delay, Runnable* p_runnable) -> void*;
-    auto run_every(double interval, Runnable* p_runnable) -> void*;
-    auto cancel_timer(void* timer_id) -> void;
+public:
+  EventLoop();
+  ~EventLoop() = default;
+  auto loop() -> void;
+  auto update(Channel *p_channel) -> void;
+  auto queue_loop(Runnable *p_runnable, void *p_param) -> void;
+  auto run_at(Timestamp when, Runnable *p_runnable) -> void *;
+  auto run_after(double delay, Runnable *p_runnable) -> void *;
+  auto run_every(double interval, Runnable *p_runnable) -> void *;
+  auto cancel_timer(void *timer_id) -> void;
 
-    virtual auto handle_read() -> void;
-    virtual auto handle_write() -> void;
+  virtual auto handle_read() -> void;
+  virtual auto handle_write() -> void;
 
-  private:
-    auto wakeup() -> void;
-    auto create_eventfd() -> void;
-    auto invoke_pending_runnables() -> void;
+private:
+  auto wakeup() -> void;
+  auto create_eventfd() -> void;
+  auto invoke_pending_runnables() -> void;
 
-    bool m_terminate;
-    Selector* mp_selector;
+  bool m_terminate;
+  Selector *mp_selector;
 
-    int m_eventfd;
-    Channel* mp_wakeup_channel;
+  int m_eventfd;
+  Channel *mp_wakeup_channel;
 
-    TimerQueue* mp_timer_queue;
+  TimerQueue *mp_timer_queue;
 
-    std::vector<Runner> m_runnables;
-    std::vector<Channel*> m_channels;
+  std::vector<Runner> m_runnables;
+  std::vector<Channel *> m_channels;
 };
 
 #endif

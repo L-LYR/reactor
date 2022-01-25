@@ -2,8 +2,8 @@
 #define MINI_MUDUO_RUNNABLE
 
 class Runnable {
-  public:
-    virtual auto run(void* param) -> void = 0;
+public:
+  virtual auto run(void *param) -> void = 0;
 };
 
 #endif

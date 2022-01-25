@@ -9,27 +9,28 @@
 #include "./tcp_server_base.hh"
 
 class EchoServer : public Server, public Runnable {
-  public:
-    EchoServer(EventLoop* event_loop);
-    ~EchoServer() = default;
+public:
+  EchoServer(EventLoop *event_loop);
+  ~EchoServer() = default;
 
-    auto start() -> void;
+  auto start() -> void;
 
-    virtual auto on_connection(TcpConnection* tcp_connection) -> void;
-    virtual auto on_message(TcpConnection* tcp_connection, Buffer& buffer) -> void;
-    virtual auto on_write_done(TcpConnection* tcp_connection) -> void;
+  virtual auto on_connection(TcpConnection *tcp_connection) -> void;
+  virtual auto on_message(TcpConnection *tcp_connection, Buffer &buffer)
+      -> void;
+  virtual auto on_write_done(TcpConnection *tcp_connection) -> void;
 
-    virtual auto run(void* param) -> void;
+  virtual auto run(void *param) -> void;
 
-  private:
-    auto echo(TcpConnection* tcp_connection, Buffer& buffer) -> void;
+private:
+  auto echo(TcpConnection *tcp_connection, Buffer &buffer) -> void;
 
-    TcpServerBase m_tcp_server_base;
-    EventLoop* mp_event_loop;
-    RequestParser m_request_parser;
+  TcpServerBase m_tcp_server_base;
+  EventLoop *mp_event_loop;
+  RequestParser m_request_parser;
 
-    void* m_timer;
-    int m_index;
+  void *m_timer;
+  int m_index;
 };
 
 #endif

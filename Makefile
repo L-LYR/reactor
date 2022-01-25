@@ -1,21 +1,27 @@
-DESTINATION := ./bin/exec
+PWD = $(shell pwd)
+BIN_DIR = $(PWD)/bin
+TARGET = exec
+DESTINATION := $(BIN_DIR)/$(TARGET)
 
 RM := rm
 SRC_SUFFIX = cc
-CC = g++
+CXX := clang++
 CPPFLAGS = -std=c++11 -Wall -g
 
 SRC := $(wildcard *.$(SRC_SUFFIX))
 OBJS := $(patsubst %.$(SRC_SUFFIX), %.o, $(SRC))
 
-.PHONY: all clean rebuild
+.PHONY: build clean rebuild
 
-rebuild: clean all
+rebuild: clean build
 
-all: $(DESTINATION)
+build: $(TARGET)
 
-$(DESTINATION): $(OBJS)
-	$(CC) -o $(DESTINATION) $(OBJS) $(addprefix -l,$(LIBS))
+make_dir:
+	mkdir -p $(BIN_DIR)
+
+$(TARGET): make_dir $(OBJS)
+	$(CXX) -o $(DESTINATION) $(OBJS) $(addprefix -l, $(LIBS))
 
 clean:
 	$(RM) *.o

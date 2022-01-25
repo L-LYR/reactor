@@ -4,18 +4,16 @@
 #include "./runnable.hh"
 
 class Runner {
-  public:
-    Runner(Runnable* p_runnable, void* p_param)
-        : mp_runnable(p_runnable), mp_param(p_param) {}
-    ~Runner() = default;
+public:
+  Runner(Runnable *p_runnable, void *p_param)
+      : mp_runnable(p_runnable), mp_param(p_param) {}
+  ~Runner() = default;
 
-    auto run() -> void {
-        mp_runnable->run(mp_param);
-    }
+  auto run() -> void { mp_runnable->run(mp_param); }
 
-  private:
-    Runnable* mp_runnable;
-    void* mp_param;
+private:
+  Runnable *mp_runnable;
+  void *mp_param;
 };
 
 #endif

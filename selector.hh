@@ -9,15 +9,15 @@
 #include "./def.hh"
 
 class Selector {
-  public:
-    Selector();
-    ~Selector() = default;
-    auto poll(std::vector<Channel*>& p_channels) -> void;
-    auto update(Channel* channel) -> void;
+public:
+  Selector();
+  ~Selector() = default;
+  auto poll(std::vector<Channel *> &p_channels) -> void;
+  auto update(Channel *channel) -> void;
 
-  private:
-    int m_epfd;
-    epoll_event m_events[max_events];
+private:
+  int m_epfd;
+  epoll_event m_events[max_events];
 };
 
 #endif
