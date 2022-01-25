@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-struct ParserState {
+struct EchoCtx {
   // used for parse, save state
   bool is_cr;
   bool is_eof;
@@ -16,16 +16,16 @@ struct ParserState {
   std::string tmp_key;
   std::string tmp_value;
 
-  ParserState();
-  ~ParserState() = default;
+  EchoCtx();
+  ~EchoCtx() = default;
 
   auto reset() -> void;
 };
 
-class RequestParser {
+class EchoService {
 public:
-  RequestParser();
-  ~RequestParser() = default;
+  EchoService();
+  ~EchoService() = default;
 
   auto parse(const char *buffer, int size) -> void;
 
@@ -36,7 +36,7 @@ public:
   auto get_response_length() -> size_t;
 
 private:
-  ParserState m_parse_state;
+  EchoCtx m_parse_state;
 
   // results
   std::string m_method;

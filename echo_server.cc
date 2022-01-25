@@ -33,16 +33,16 @@ auto EchoServer::on_write_done(TcpConnection *tcp_connection) -> void {
 auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
   info("Echoing...\n");
   while (buffer.readable_bytes() > signal_length) {
-    m_request_parser.parse(buffer.readable_begin(), buffer.readable_bytes());
+    m_echo_service.parse(buffer.readable_begin(), buffer.readable_bytes());
     buffer.retrieve_all();
   }
-  if (m_request_parser.generate_response()) {
-    tcp_connection->send(m_request_parser.get_response(),
-                         m_request_parser.get_response_length());
+  if (m_echo_service.generate_response()) {
+    tcp_connection->send(m_echo_service.get_response(),
+                         m_echo_service.get_response_length());
   } else {
     error("Fail to response...\n");
   }
-  m_request_parser.reset();
+  m_echo_service.reset();
 }
 
 auto EchoServer::run(void *param) -> void {

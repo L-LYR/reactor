@@ -1,8 +1,8 @@
-#include "./http_request_parser.hh"
+#include "./echo_service.hh"
 
-ParserState::ParserState() { reset(); }
+EchoCtx::EchoCtx() { reset(); }
 
-auto ParserState::reset() -> void {
+auto EchoCtx::reset() -> void {
   is_cr = is_eof = need_key = available = false;
   is_first_line = true;
   first_line_field = 0;
@@ -11,9 +11,9 @@ auto ParserState::reset() -> void {
   tmp_value.clear();
 }
 
-RequestParser::RequestParser() { reset(); }
+EchoService::EchoService() { reset(); }
 
-auto RequestParser::reset() -> void {
+auto EchoService::reset() -> void {
   m_parse_state.reset();
   m_method.clear();
   m_path.clear();
@@ -22,15 +22,15 @@ auto RequestParser::reset() -> void {
   m_response.clear();
 }
 
-auto RequestParser::get_response() -> const char * {
+auto EchoService::get_response() -> const char * {
   return m_response.c_str();
 }
 
-auto RequestParser::get_response_length() -> size_t {
+auto EchoService::get_response_length() -> size_t {
   return m_response.length();
 }
 
-auto RequestParser::parse(const char *buffer, int size) -> void {
+auto EchoService::parse(const char *buffer, int size) -> void {
   char ch;
   for (int i = 0; i < size; ++i, m_parse_state.prev_ch = ch) {
     ch = buffer[i];
@@ -75,7 +75,7 @@ auto RequestParser::parse(const char *buffer, int size) -> void {
   }
 }
 
-auto RequestParser::generate_response() -> bool {
+auto EchoService::generate_response() -> bool {
   if (!m_parse_state.available)
     return false;
   std::string response_body = "<!DOCTYPE html><html><head>"

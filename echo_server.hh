@@ -4,7 +4,7 @@
 #include <string>
 
 #include "./decl.hh"
-#include "./http_request_parser.hh"
+#include "./echo_service.hh"
 #include "./server.hh"
 #include "./tcp_server_base.hh"
 
@@ -27,7 +27,7 @@ private:
 
   TcpServerBase m_tcp_server_base;
   EventLoop *mp_event_loop;
-  RequestParser m_request_parser;
+  EchoService m_echo_service;
 
   void *m_timer;
   int m_index;
