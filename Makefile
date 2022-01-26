@@ -11,9 +11,7 @@ CPPFLAGS = -std=c++11 -Wall -g
 SRC := $(wildcard *.$(SRC_SUFFIX))
 OBJS := $(patsubst %.$(SRC_SUFFIX), %.o, $(SRC))
 
-.PHONY: build clean rebuild
-
-rebuild: clean build
+.PHONY: build clean
 
 build: $(TARGET)
 

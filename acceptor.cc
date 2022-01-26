@@ -32,7 +32,7 @@ auto Acceptor::handle_read() -> void {
     return;
   }
 
-  info("new connection from [%s:%d] new socket fd: %d\n",
+  info("new connection from [%s:%d], new socket fd: %d\n",
        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), connfd);
   fcntl(connfd, F_SETFL, O_NONBLOCK);
 

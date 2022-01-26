@@ -6,14 +6,14 @@
 #include "./timer.hh"
 
 EchoServer::EchoServer(EventLoop *event_loop)
-    : m_tcp_server_base(event_loop), mp_event_loop(event_loop),
-      m_timer(nullptr), m_index(0) {
+    : m_tcp_server_base(event_loop), qps(5.0) {
   m_tcp_server_base.set_callback(this);
+  event_loop->run_every(qps.interval, this);
 }
 
 auto EchoServer::start() -> void { m_tcp_server_base.start(); }
 
-auto EchoServer::on_connection(TcpConnection *tcp_connection) -> void {
+auto EchoServer::on_connection(TcpConnection *_) -> void {
   info("Connection Established...\n");
 }
 
@@ -21,17 +21,15 @@ auto EchoServer::on_message(TcpConnection *tcp_connection, Buffer &buffer)
     -> void {
   info("Message Received...\n");
   echo(tcp_connection, buffer);
-  if (m_timer == nullptr) {
-    m_timer = mp_event_loop->run_every(0.5, this);
-  }
+  qps.inc();
 }
 
 auto EchoServer::on_write_done(TcpConnection *tcp_connection) -> void {
-  info("Echo done...\n");
+  info("Done...\n");
 }
 
 auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
-  info("Echoing...\n");
+  info("Echo...\n");
   while (buffer.readable_bytes() > signal_length) {
     m_echo_service.parse(buffer.readable_begin(), buffer.readable_bytes());
     buffer.retrieve_all();
@@ -46,10 +44,6 @@ auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
 }
 
 auto EchoServer::run(void *param) -> void {
-  info("timer count: %d\n", m_index);
-  if (m_index++ == 3) {
-    mp_event_loop->cancel_timer(m_timer);
-    m_index = 0;
-    m_timer = nullptr;
-  }
+  info("QPS: %lf\n", qps.result());
+  qps.reset();
 }

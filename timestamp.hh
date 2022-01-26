@@ -11,6 +11,8 @@ public:
   using clock = std::chrono::steady_clock;
   using timestamp = std::chrono::time_point<clock>;
   using duration = timestamp::duration;
+  using microseconds = std::chrono::microseconds;
+  using seconds = std::chrono::seconds;
 
   Timestamp() = default;
   ~Timestamp() = default;
@@ -18,14 +20,12 @@ public:
 
   auto is_valid() -> bool { return m_ts.time_since_epoch() > duration::zero(); }
 
-  auto seconds_since_epoch() const -> std::chrono::seconds {
-    return std::chrono::duration_cast<std::chrono::seconds>(
-        m_ts.time_since_epoch());
+  auto seconds_since_epoch() const -> seconds {
+    return std::chrono::duration_cast<seconds>(m_ts.time_since_epoch());
   }
 
-  auto microseconds_since_epoch() const -> std::chrono::microseconds {
-    return std::chrono::duration_cast<std::chrono::microseconds>(
-        m_ts.time_since_epoch());
+  auto microseconds_since_epoch() const -> microseconds {
+    return std::chrono::duration_cast<microseconds>(m_ts.time_since_epoch());
   }
 
   auto operator<(const Timestamp &r) const -> bool {
@@ -59,12 +59,10 @@ public:
   static auto now_after(double seconds) -> Timestamp {
     return clock::now() +
            std::chrono::duration_cast<duration>(
-               std::chrono::duration<double, std::chrono::seconds::period>(
-                   seconds));
+               std::chrono::duration<double, seconds::period>(seconds));
   }
 
-  static auto microseconds_from_now_to(const Timestamp &ts)
-      -> std::chrono::microseconds {
+  static auto microseconds_from_now_to(const Timestamp &ts) -> microseconds {
     return ts.microseconds_since_epoch() - now().microseconds_since_epoch();
   }
 

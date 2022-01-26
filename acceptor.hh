@@ -20,7 +20,6 @@ private:
   auto bind_and_listen() -> void;
 
   EventLoop *mp_event_loop;
-
   int m_listenfd;
   Channel *mp_channel;
   AcceptorCallback *mp_acceptor_callback;

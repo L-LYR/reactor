@@ -129,7 +129,7 @@ auto TimerQueue::insert(Timer *p_timer) -> bool {
   }
   auto ret = m_timer_list.insert(TimerListEntry(p_timer->get_id(), p_timer));
   if (!ret.second) {
-    error("errnr in insert()\n");
+    error("error in insert()\n");
   }
   return earliest_timer_changed;
 }
@@ -139,6 +139,6 @@ auto TimerQueue::remove(const TimerListEntry &entry) -> void {
   if (it != m_timer_list.end()) {
     m_timer_list.erase(it);
   } else {
-    info("remove an inexistent timer\n");
+    error("remove an inexistent timer\n");
   }
 }

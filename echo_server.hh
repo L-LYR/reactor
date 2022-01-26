@@ -7,6 +7,19 @@
 #include "./echo_service.hh"
 #include "./server.hh"
 #include "./tcp_server_base.hh"
+#include "./timer_queue.hh"
+
+class QPS {
+  friend class EchoServer;
+  int count;
+  double interval; // second
+
+  explicit QPS(double interval) : count(0), interval(interval) {}
+
+  auto result() -> double { return count / interval; }
+  auto reset() -> void { count = 0; }
+  auto inc() -> void { count++; }
+};
 
 class EchoServer : public Server, public Runnable {
 public:
@@ -26,11 +39,9 @@ private:
   auto echo(TcpConnection *tcp_connection, Buffer &buffer) -> void;
 
   TcpServerBase m_tcp_server_base;
-  EventLoop *mp_event_loop;
   EchoService m_echo_service;
 
-  void *m_timer;
-  int m_index;
+  QPS qps;
 };
 
 #endif
