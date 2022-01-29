@@ -3,7 +3,7 @@
 EchoCtx::EchoCtx() { reset(); }
 
 auto EchoCtx::reset() -> void {
-  is_cr = is_eof = need_key = available = false;
+  is_kill = is_cr = is_eof = need_key = available = false;
   is_first_line = true;
   first_line_field = 0;
   prev_ch = '\0';
@@ -22,13 +22,13 @@ auto EchoService::reset() -> void {
   m_response.clear();
 }
 
-auto EchoService::get_response() -> const char * {
-  return m_response.c_str();
-}
+auto EchoService::get_response() -> const char * { return m_response.c_str(); }
 
 auto EchoService::get_response_length() -> size_t {
   return m_response.length();
 }
+
+auto EchoService::get_kill_sig() -> bool { return m_parse_state.is_kill; }
 
 auto EchoService::parse(const char *buffer, int size) -> void {
   char ch;
@@ -73,11 +73,26 @@ auto EchoService::parse(const char *buffer, int size) -> void {
       }
     }
   }
+  if (m_path == "/stop") {
+    m_parse_state.is_kill = true;
+  }
 }
 
 auto EchoService::generate_response() -> bool {
-  if (!m_parse_state.available)
+  if (!m_parse_state.available) {
     return false;
+  }
+
+  if (m_parse_state.is_kill) {
+    std::string response_body = "Good Bye!";
+    m_response = "HTTP/1.1 200 OK\r\n"
+                 "Content-Type: text/html; charset=UTF-8\r\n"
+                 "Content-Length: " +
+                 std::to_string(response_body.length()) + "\r\n\r\n" +
+                 response_body;
+    return true;
+  }
+
   std::string response_body = "<!DOCTYPE html><html><head>"
                               "<title>Request info</title>"
                               "<style>"
@@ -103,13 +118,11 @@ auto EchoService::generate_response() -> bool {
   response_body += "</table>";
   response_body += "</body></html>\r\n";
 
-  std::string response_headers = "HTTP/1.1 200 OK\r\n"
-                                 "Content-Type: text/html; charset=UTF-8\r\n"
-                                 "Connection: keep-alive\r\n"
-                                 "Content-Length: " +
-                                 std::to_string(response_body.length()) +
-                                 "\r\n\r\n";
-
-  m_response = response_headers + response_body;
+  m_response = "HTTP/1.1 200 OK\r\n"
+               "Content-Type: text/html; charset=UTF-8\r\n"
+               "Connection: keep-alive\r\n"
+               "Content-Length: " +
+               std::to_string(response_body.length()) + "\r\n\r\n" +
+               response_body;
   return true;
 }

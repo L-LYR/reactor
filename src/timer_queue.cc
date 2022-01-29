@@ -22,7 +22,17 @@ TimerQueue::TimerQueue(EventLoop *p_loop)
   mp_timerfd_channel->enable_read();
 }
 
-TimerQueue::~TimerQueue() { ::close(m_timerfd); }
+TimerQueue::~TimerQueue() {
+  ::close(m_timerfd);
+  delete mp_add_timer_wrapper;
+  delete mp_remove_timer_wrapper;
+  if (mp_timerfd_channel != nullptr) {
+    delete mp_timerfd_channel;
+  }
+  for (auto entry : m_timer_list) {
+    delete entry.second;
+  }
+}
 
 auto TimerQueue::add_timer(void *param) -> void {
   Timer *newp_timer = static_cast<Timer *>(param);
@@ -92,6 +102,8 @@ auto TimerQueue::reset_repeat_timers(const std::vector<TimerListEntry> &expired,
     if (t.second->is_repeat()) {
       t.second->move_to_next();
       insert(t.second);
+    } else {
+      delete t.second;
     }
   }
   if (!m_timer_list.empty()) {
@@ -137,6 +149,7 @@ auto TimerQueue::insert(Timer *p_timer) -> bool {
 auto TimerQueue::remove(const TimerListEntry &entry) -> void {
   auto it = m_timer_list.find(entry);
   if (it != m_timer_list.end()) {
+    delete it->second;
     m_timer_list.erase(it);
   } else {
     error("remove an inexistent timer\n");

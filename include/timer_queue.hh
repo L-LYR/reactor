@@ -44,10 +44,10 @@ private:
   TimerList m_timer_list;
 
   EventLoop *mp_loop;
-  Channel *mp_timerfd_channel;
+  Channel *mp_timerfd_channel; // own
 
-  AddTimerWrapper *mp_add_timer_wrapper;
-  RemoveTimerWrapper *mp_remove_timer_wrapper;
+  AddTimerWrapper *mp_add_timer_wrapper;       // own
+  RemoveTimerWrapper *mp_remove_timer_wrapper; // own
 };
 
 #endif

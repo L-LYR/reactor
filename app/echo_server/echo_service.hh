@@ -6,6 +6,7 @@
 
 struct EchoCtx {
   // used for parse, save state
+  bool is_kill;
   bool is_cr;
   bool is_eof;
   bool is_first_line;
@@ -34,6 +35,7 @@ public:
   auto generate_response() -> bool;
   auto get_response() -> const char *;
   auto get_response_length() -> size_t;
+  auto get_kill_sig() -> bool;
 
 private:
   EchoCtx m_parse_state;

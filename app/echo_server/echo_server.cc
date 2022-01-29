@@ -2,13 +2,15 @@
 
 #include "logger.hh"
 
-EchoServer::EchoServer(EventLoop *event_loop)
-    : m_tcp_server_base(event_loop), qps(5.0) {
+EchoServer::EchoServer() : m_tcp_server_base(&m_event_loop), m_qps(5.0) {
   m_tcp_server_base.set_callback(this);
-  event_loop->run_every(qps.interval, this);
+  m_event_loop.run_every(m_qps.interval, this);
 }
 
-auto EchoServer::start() -> void { m_tcp_server_base.start(); }
+auto EchoServer::run() -> void {
+  m_tcp_server_base.run();
+  m_event_loop.loop();
+}
 
 auto EchoServer::on_connection(TcpConnection *_) -> void {
   info("Connection Established...\n");
@@ -18,7 +20,7 @@ auto EchoServer::on_message(TcpConnection *tcp_connection, Buffer &buffer)
     -> void {
   info("Message Received...\n");
   echo(tcp_connection, buffer);
-  qps.inc();
+  m_qps.inc();
 }
 
 auto EchoServer::on_write_done(TcpConnection *tcp_connection) -> void {
@@ -37,10 +39,13 @@ auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
   } else {
     error("Fail to response...\n");
   }
+  if (m_echo_service.get_kill_sig()) {
+    m_event_loop.stop();
+  }
   m_echo_service.reset();
 }
 
 auto EchoServer::run(void *param) -> void {
-  info("QPS: %lf\n", qps.result());
-  qps.reset();
+  info("QPS: %lf\n", m_qps.result());
+  m_qps.reset();
 }

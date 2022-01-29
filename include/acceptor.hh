@@ -8,7 +8,7 @@
 class Acceptor : public ChannelCallback {
 public:
   Acceptor(EventLoop *event_loop);
-  ~Acceptor() = default;
+  ~Acceptor();
 
   auto run() -> void;
   auto set_callback(AcceptorCallback *p_acceptor_callback) -> void;
@@ -21,7 +21,7 @@ private:
 
   EventLoop *mp_event_loop;
   int m_listenfd;
-  Channel *mp_channel;
+  Channel *mp_channel; // own
   AcceptorCallback *mp_acceptor_callback;
 };
 

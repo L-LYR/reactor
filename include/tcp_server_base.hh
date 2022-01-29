@@ -3,25 +3,25 @@
 
 #include <unordered_map>
 
+#include "acceptor.hh"
 #include "callback.hh"
-#include "decl.hh"
-#include "def.hh"
+#include "tcp_connection.hh"
 
 class TcpServerBase : public AcceptorCallback {
 public:
   explicit TcpServerBase(EventLoop *event_loop);
-  ~TcpServerBase() = default;
+  ~TcpServerBase();
 
   virtual auto on_connection(int sockfd) -> void override;
 
-  auto start() -> void;
+  auto run() -> void;
 
   auto set_callback(Server *server) -> void;
 
 private:
   Server *mp_server;
-  Acceptor *mp_acceptor;
   EventLoop *mp_event_loop;
+  Acceptor *mp_acceptor; // own
   std::unordered_map<int, TcpConnection *> m_connections;
 };
 

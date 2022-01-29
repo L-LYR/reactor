@@ -18,6 +18,12 @@ auto Acceptor::run() -> void {
   mp_channel->enable_read();
 }
 
+Acceptor::~Acceptor() {
+  if (mp_channel != nullptr) {
+    delete mp_channel;
+  }
+}
+
 auto Acceptor::set_callback(AcceptorCallback *p_acceptor_callback) -> void {
   mp_acceptor_callback = p_acceptor_callback;
 }

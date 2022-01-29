@@ -12,7 +12,7 @@
 class TcpConnection : public ChannelCallback, public Runnable {
 public:
   TcpConnection(EventLoop *event_loop, int connfd);
-  ~TcpConnection() = default;
+  ~TcpConnection();
 
   virtual auto handle_read() -> void;
   virtual auto handle_write() -> void;
@@ -24,7 +24,7 @@ public:
   auto send(const char *data, size_t length) -> void;
 
 private:
-  Channel *mp_channel;
+  Channel *mp_channel; // own
   EventLoop *mp_event_loop;
   Server *mp_server;
   Buffer m_in_buffer;

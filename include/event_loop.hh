@@ -13,8 +13,9 @@
 class EventLoop : public ChannelCallback {
 public:
   EventLoop();
-  ~EventLoop() = default;
+  ~EventLoop();
   auto loop() -> void;
+  auto stop() -> void;
   auto update(Channel *p_channel) -> void;
   auto queue_loop(Runnable *p_runnable, void *p_param) -> void;
   auto run_at(Timestamp when, Runnable *p_runnable) -> void *;
@@ -31,12 +32,12 @@ private:
   auto invoke_pending_runnables() -> void;
 
   bool m_terminate;
-  Selector *mp_selector;
+  Selector *mp_selector; // own
 
   int m_eventfd;
-  Channel *mp_wakeup_channel;
+  Channel *mp_wakeup_channel; // own
 
-  TimerQueue *mp_timer_queue;
+  TimerQueue *mp_timer_queue; // own
 
   std::vector<Runner> m_runnables;
   std::vector<Channel *> m_channels;

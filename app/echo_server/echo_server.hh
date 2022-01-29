@@ -4,10 +4,10 @@
 #include <string>
 
 #include "echo_service.hh"
+#include "event_loop.hh"
 #include "server.hh"
 #include "tcp_server_base.hh"
 #include "timer_queue.hh"
-#include "event_loop.hh"
 
 class QPS {
   friend class EchoServer;
@@ -23,10 +23,10 @@ class QPS {
 
 class EchoServer : public Server, public Runnable {
 public:
-  EchoServer(EventLoop *event_loop);
+  EchoServer();
   ~EchoServer() = default;
 
-  auto start() -> void;
+  auto run() -> void;
 
   virtual auto on_connection(TcpConnection *tcp_connection) -> void;
   virtual auto on_message(TcpConnection *tcp_connection, Buffer &buffer)
@@ -38,10 +38,11 @@ public:
 private:
   auto echo(TcpConnection *tcp_connection, Buffer &buffer) -> void;
 
+  EventLoop m_event_loop;
   TcpServerBase m_tcp_server_base;
+  
   EchoService m_echo_service;
-
-  QPS qps;
+  QPS m_qps;
 };
 
 #endif

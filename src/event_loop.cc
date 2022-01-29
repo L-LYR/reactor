@@ -1,5 +1,6 @@
 #include "event_loop.hh"
 
+#include <csignal>
 #include <sys/eventfd.h>
 #include <unistd.h>
 
@@ -21,6 +22,14 @@ EventLoop::EventLoop()
   mp_wakeup_channel->enable_read();
 }
 
+EventLoop::~EventLoop() {
+  delete mp_selector;
+  delete mp_timer_queue;
+  if (mp_wakeup_channel != nullptr) {
+    delete mp_wakeup_channel;
+  }
+}
+
 auto EventLoop::loop() -> void {
   while (!m_terminate) {
     mp_selector->poll(m_channels);
@@ -32,6 +41,8 @@ auto EventLoop::loop() -> void {
   }
 }
 
+auto EventLoop::stop() -> void { m_terminate = true; }
+
 auto EventLoop::queue_loop(Runnable *p_runnable, void *p_param) -> void {
   m_runnables.emplace_back(p_runnable, p_param);
   wakeup();
@@ -41,7 +52,7 @@ auto EventLoop::handle_read() -> void {
   uint64_t one = 1;
   ssize_t n = ::read(m_eventfd, &one, sizeof(one));
   if (n != sizeof(one)) {
-    error("Fail to read signal...\n");
+    error("Fail to read wakeup signal...\n");
   }
 }
 

@@ -11,11 +11,12 @@
 #include "server.hh"
 
 TcpConnection::TcpConnection(EventLoop *event_loop, int connfd)
-    : mp_event_loop(event_loop) {
-  mp_channel = new Channel(event_loop, connfd);
+    : mp_event_loop(event_loop), mp_channel(new Channel(event_loop, connfd)) {
   mp_channel->set_callback(this);
   mp_channel->enable_read();
 }
+
+TcpConnection::~TcpConnection() { delete mp_channel; }
 
 auto TcpConnection::handle_read() -> void {
   int sockfd = mp_channel->get_sockfd();
