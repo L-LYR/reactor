@@ -73,7 +73,7 @@ auto TimerQueue::handle_write() -> void {}
 auto TimerQueue::create_timerfd() -> void {
   m_timerfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
   if (m_timerfd < 0) {
-    error("error in timerfd_create(), errno: %d\n", errno);
+    error("error in timerfd_create(), errno: {}", errno);
   }
 }
 
@@ -92,7 +92,7 @@ auto TimerQueue::reset_timerfd(const Timestamp &ts) -> void {
   new_timerspec.it_value.tv_sec = seconds.count();
   new_timerspec.it_value.tv_nsec = nanoseconds.count();
   if (::timerfd_settime(m_timerfd, 0, &new_timerspec, NULL) < 0) {
-    error("error in timerfd_settime(), errno: %d\n", errno);
+    error("error in timerfd_settime(), errno: {}", errno);
   }
 }
 
@@ -118,7 +118,7 @@ auto TimerQueue::read_timerfd(const Timestamp &now) -> void {
   uint64_t timer_signal;
   ssize_t ret_n = ::read(m_timerfd, &timer_signal, sizeof(timer_signal));
   if (ret_n != sizeof(timer_signal)) {
-    error("error in read(), errno: %d\n", errno);
+    error("error in read(), errno: {}", errno);
   }
 }
 
@@ -141,7 +141,7 @@ auto TimerQueue::insert(Timer *p_timer) -> bool {
   }
   auto ret = m_timer_list.insert(TimerListEntry(p_timer->get_id(), p_timer));
   if (!ret.second) {
-    error("error in insert()\n");
+    error("error in insert()");
   }
   return earliest_timer_changed;
 }
@@ -152,6 +152,6 @@ auto TimerQueue::remove(const TimerListEntry &entry) -> void {
     delete it->second;
     m_timer_list.erase(it);
   } else {
-    error("remove an inexistent timer\n");
+    error("remove an inexistent timer");
   }
 }

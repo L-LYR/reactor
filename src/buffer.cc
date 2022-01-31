@@ -34,7 +34,7 @@ auto Buffer::read_from_sockfd(int sockfd) -> int {
   int iovec_cnt = (cur_writable_bytes < extra_buffer_size) ? 2 : 1;
   ssize_t ret = ::readv(sockfd, io_vec, iovec_cnt);
   if (ret < 0) {
-    error("error in ready(), errno: %d\n", errno);
+    error("error in ready(), errno: {}", errno);
   } else if (size_t(ret) <= cur_writable_bytes) {
     has_written(ret);
   } else {

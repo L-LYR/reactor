@@ -52,7 +52,7 @@ auto EventLoop::handle_read() -> void {
   uint64_t one = 1;
   ssize_t n = ::read(m_eventfd, &one, sizeof(one));
   if (n != sizeof(one)) {
-    error("Fail to read wakeup signal...\n");
+    error("Fail to read wakeup signal...");
   }
 }
 
@@ -66,14 +66,14 @@ auto EventLoop::wakeup() -> void {
   uint64_t one = 1;
   ssize_t n = ::write(m_eventfd, &one, sizeof(one));
   if (n != sizeof(one)) {
-    error("Fail to send wakeup signal...\n");
+    error("Fail to send wakeup signal...");
   }
 }
 
 auto EventLoop::create_eventfd() -> void {
   m_eventfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
   if (m_eventfd < 0) {
-    error("error in eventfd(), errno: %d\n", errno);
+    error("error in eventfd(), errno: {}", errno);
   }
 }
 

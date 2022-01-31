@@ -34,11 +34,11 @@ auto Acceptor::handle_read() -> void {
   int connfd = ::accept(m_listenfd, (sockaddr *)&client_addr,
                         (socklen_t *)&client_length);
   if (connfd < 0) {
-    error("error in accept(), connfd: %d, errno: %d\n", connfd, errno);
+    error("error in accept(), connfd: {}, errno: {}", connfd, errno);
     return;
   }
 
-  info("new connection from [%s:%d], new socket fd: %d\n",
+  info("new connection from [{}:{}], new socket fd: {}",
        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), connfd);
   fcntl(connfd, F_SETFL, O_NONBLOCK);
 
@@ -51,16 +51,16 @@ auto Acceptor::bind_and_listen() -> void {
   // listen socket
   m_listenfd = ::socket(AF_INET, SOCK_STREAM, 0); // TCP
   if (m_listenfd < 0) {
-    error("error in socket(), errno: %d\n", errno);
+    error("error in socket(), errno: {}", errno);
   }
   if (-1 == ::fcntl(m_listenfd, F_SETFL, O_NONBLOCK)) {
-    error("error in fcntl(), errno: %d\n", errno);
+    error("error in fcntl(), errno: {}", errno);
   } // non-block io
 
   int on = 1;
   if (-1 ==
       ::setsockopt(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) {
-    error("error in setsockopt(), errno: %d\n", errno);
+    error("error in setsockopt(), errno: {}", errno);
   } // reusable addr in bind
 
   // bind
@@ -69,14 +69,14 @@ auto Acceptor::bind_and_listen() -> void {
   server_addr.sin_addr.s_addr = ::htonl(INADDR_ANY);
   server_addr.sin_port = ::htons(10086);
   if (-1 == ::bind(m_listenfd, (sockaddr *)&server_addr, sizeof(server_addr))) {
-    error("error in bind(), errno: %d\n", errno);
+    error("error in bind(), errno: {}", errno);
   }
   // listen
   if (-1 == ::listen(m_listenfd, max_listen_fd)) {
-    error("error in listen(), errno: %d\n", errno);
+    error("error in listen(), errno: {}", errno);
   }
   // show info
-  info("bind addr: [%s:%d], listening fd: %d\n",
+  info("bind addr: [{}:{}], listening fd: {}",
        inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port),
        m_listenfd);
 }

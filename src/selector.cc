@@ -7,14 +7,14 @@
 Selector::Selector() {
   m_epfd = ::epoll_create1(EPOLL_CLOEXEC);
   if (m_epfd <= 0) {
-    error("error in epoll_create1(), errno: %d\n", errno);
+    error("error in epoll_create1(), errno: {}", errno);
   }
 }
 
 auto Selector::poll(std::vector<Channel *> &p_channels) -> void {
   int fds = ::epoll_wait(m_epfd, m_events, max_events, -1);
   if (fds == -1) {
-    error("error in epoll_wait(), errno: %d\n", errno);
+    error("error in epoll_wait(), errno: {}", errno);
     return;
   }
   for (int i = 0; i < fds; i++) {

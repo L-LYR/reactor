@@ -13,22 +13,22 @@ auto EchoServer::run() -> void {
 }
 
 auto EchoServer::on_connection(TcpConnection *_) -> void {
-  info("Connection Established...\n");
+  info("Connection Established...");
 }
 
 auto EchoServer::on_message(TcpConnection *tcp_connection, Buffer &buffer)
     -> void {
-  info("Message Received...\n");
+  info("Message Received...");
   echo(tcp_connection, buffer);
   m_qps.inc();
 }
 
 auto EchoServer::on_write_done(TcpConnection *tcp_connection) -> void {
-  info("Done...\n");
+  info("Done...");
 }
 
 auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
-  info("Echo...\n");
+  info("Echo...");
   while (buffer.readable_bytes() > signal_length) {
     m_echo_service.parse(buffer.readable_begin(), buffer.readable_bytes());
     buffer.retrieve_all();
@@ -37,7 +37,7 @@ auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
     tcp_connection->send(m_echo_service.get_response(),
                          m_echo_service.get_response_length());
   } else {
-    error("Fail to response...\n");
+    error("Fail to response...");
   }
   if (m_echo_service.get_kill_sig()) {
     m_event_loop.stop();
@@ -46,6 +46,6 @@ auto EchoServer::echo(TcpConnection *tcp_connection, Buffer &buffer) -> void {
 }
 
 auto EchoServer::run(void *param) -> void {
-  info("QPS: %lf\n", m_qps.result());
+  info("QPS: {}", m_qps.result());
   m_qps.reset();
 }
